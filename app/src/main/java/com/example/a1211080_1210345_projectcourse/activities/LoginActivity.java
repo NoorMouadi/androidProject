@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
             SharedPreferences session = getSharedPreferences(SESSION_PREFS, MODE_PRIVATE);
             session.edit().putString(KEY_LOGGED_IN_EMAIL, email).apply();
 
-            Toast.makeText(this, "Login successful ☕", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Login successful !", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, MainActivity.class));
             finish();
         } else {
