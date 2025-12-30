@@ -123,6 +123,22 @@ public class SignupActivity extends AppCompatActivity {
         field.setError(null);
         field.setTextColor(Color.BLACK);
     }
+    
+    private void attachAutoReset(EditText field) {
+    field.addTextChangedListener(new android.text.TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            field.setError(null);
+            field.setTextColor(Color.BLACK);
+        }
+
+        @Override
+        public void afterTextChanged(android.text.Editable s) {}
+    });
+}
 
     private boolean isValidPassword(String password) {
         if (password.length() < 6 || password.length() > 12)
