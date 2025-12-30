@@ -17,15 +17,31 @@ import com.example.a1211080_1210345_projectcourse.database.DBHelper;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText emailInput, passwordInput;
-    Button loginButton;
-    TextView signupRedirect;
-    CheckBox rememberMe;
-    DBHelper db;
+    private static final String PREFS_NAME = "remember_me";
+    private static final String KEY_EMAIL = "email";
+
+    private static final String SESSION_PREFS = "session";
+    private static final String KEY_LOGGED_IN_EMAIL = "logged_in_email";
+
+    private EditText emailInput, passwordInput;
+    private Button loginButton;
+    private TextView signupRedirect;
+    private CheckBox rememberMe;
+    private DBHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //If user already logged in, skip login screen
+        SharedPreferences session = getSharedPreferences(SESSION_PREFS, MODE_PRIVATE);
+        String loggedInEmail = session.getString(KEY_LOGGED_IN_EMAIL, null);
+        if (loggedInEmail != null && !loggedInEmail.trim().isEmpty()) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_login);
 
         emailInput = findViewById(R.id.loginEmail);
@@ -36,10 +52,8 @@ public class LoginActivity extends AppCompatActivity {
 
         db = new DBHelper(this);
 
-        // ✅ Prefill remembered email
-        SharedPreferences prefs = getSharedPreferences("remember_me", MODE_PRIVATE);
-        String savedEmail = prefs.getString("email", "");
-
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        String savedEmail = prefs.getString(KEY_EMAIL, "");
         if (!savedEmail.isEmpty()) {
             emailInput.setText(savedEmail);
             rememberMe.setChecked(true);
@@ -73,19 +87,21 @@ public class LoginActivity extends AppCompatActivity {
         boolean success = db.checkUserLogin(email, password);
 
         if (success) {
-
-            SharedPreferences prefs = getSharedPreferences("remember_me", MODE_PRIVATE);
-
+            // Save remember-me email if checked
+            SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
             if (rememberMe.isChecked()) {
-                prefs.edit().putString("email", email).apply();
+                prefs.edit().putString(KEY_EMAIL, email).apply();
             } else {
-                prefs.edit().remove("email").apply();
+                prefs.edit().remove(KEY_EMAIL).apply();
             }
+
+            // Save session (current logged-in user)
+            SharedPreferences session = getSharedPreferences(SESSION_PREFS, MODE_PRIVATE);
+            session.edit().putString(KEY_LOGGED_IN_EMAIL, email).apply();
 
             Toast.makeText(this, "Login successful ☕", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, MainActivity.class));
             finish();
-
         } else {
             Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
         }
