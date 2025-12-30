@@ -34,6 +34,11 @@ public class SignupActivity extends AppCompatActivity {
         signupButton = findViewById(R.id.signupButton);
 
         db = new DBHelper(this);
+        attachAutoReset(emailInput);
+        attachAutoReset(firstNameInput);
+        attachAutoReset(lastNameInput);
+        attachAutoReset(passwordInput);
+        attachAutoReset(confirmPasswordInput);
 
         signupButton.setOnClickListener(v -> registerUser());
     }
