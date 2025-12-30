@@ -12,9 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme._1211080_1210345_ProjectCourse">
 
-        <!-- LOGIN = LAUNCHER -->
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".activities.WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,19 +21,16 @@
             </intent-filter>
         </activity>
 
-        <!-- MAIN APP (Navigation Drawer) -->
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false" />
 
-        <!-- SIGN UP -->
         <activity
             android:name=".activities.SignupActivity"
             android:exported="false" />
 
-        <!-- OPTIONAL WELCOME SCREEN -->
         <activity
-            android:name=".activities.WelcomeActivity"
+            android:name=".MainActivity"
             android:exported="false" />
 
     </application>
